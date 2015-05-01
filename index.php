@@ -10,7 +10,7 @@ $db = new PDO('mysql:host=localhost;dbname=employees;charset=utf8', 'root', 'pro
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
 
 //Pages
-echo '<a href="index.php?page=1">Who is the highest paid employee?</a><br>';
+echo '<a href="index.php?page=R1">Who is the highest paid employee?</a><br>';
 echo '<a href="index.php?page=2">Who is the highest paid employee between 1985 and 1981?</a><br>';
 echo '<a href="index.php?page=3">Which department currently has highest paid department manager?</a><br>';
 echo '<a href="index.php?page=4">What are the titles of all the departments?</a><br>';
@@ -23,11 +23,17 @@ echo '<a href="index.php?page=10">How much is currently spent for all salaries?<
 echo '<br><br>';
 
 //Page 1
-if($_GET['page']==1)
+if($_GET['page']=="R1")
 {
 	$sql = 'select employees.emp_no, employees.first_name, employees.last_name, salaries.salary from
 	 employees left join salaries on employees.emp_no = salaries.emp_no order by salary DESC limit 2;';
+}
 	
+
+// Sorts the array and prints it
+// This statment detects if the button clicked is a request R
+if (strpos($_GET['page'],"R")===0)
+{
 	$num=1;
 	foreach($db->query($sql) as $row)
 	{
@@ -50,7 +56,7 @@ if($_GET['page']==1)
                         echo "</td>";
                         echo "</tr>";	
 		foreach ($row as $key => $value)
-		{;
+		{
 			echo "<tr>";
 			echo "<td>";
 			echo ($key);
@@ -58,15 +64,14 @@ if($_GET['page']==1)
 			echo "<td>";
 			echo ($value);
 			echo "</td>";
-			echo "</tr>";
-			
+			echo "</tr>";	
 		}
 		echo "</table>";
 		$num++;
 		echo("<br>");
 	}
-     
-}
+}    
+
 
 
 /*
