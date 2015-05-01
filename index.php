@@ -20,13 +20,54 @@ echo '<a href="index.php?page=7">Who is currently the lowest paid employee?</a><
 echo '<a href="index.php?page=8">How many employees currently work in each department?</a><br>';
 echo '<a href="index.php?page=9">How much does each department currently spend on salaries? </a><br>';
 echo '<a href="index.php?page=10">How much is currently spent for all salaries?</a><br>';
-
+echo '<br><br>';
 
 //Page 1
 if($_GET['page']==1)
 {
-	print($_GET['page']);
+	$sql = 'select employees.emp_no, employees.first_name, employees.last_name, salaries.salary from
+	 employees left join salaries on employees.emp_no = salaries.emp_no order by salary DESC limit 2;';
+	
+	$num=1;
+	foreach($db->query($sql) as $row)
+	{
+	
+	//remove duplicates	
+	$remove=0;
+	foreach($row as $x)
+	{
+		unset($row[$remove]);
+		$remove++;
+	}
+		//Printer each Entrey as a table
+		echo "<table border='1' style='width:100%' table-layout: fixed>";
+                        echo "<tr>";
+                        echo "<td>";
+                        echo ("Result Number");
+                        echo "</td>";
+                        echo "<td>";
+                        echo ($num);
+                        echo "</td>";
+                        echo "</tr>";	
+		foreach ($row as $key => $value)
+		{;
+			echo "<tr>";
+			echo "<td>";
+			echo ($key);
+			echo "</td>";
+			echo "<td>";
+			echo ($value);
+			echo "</td>";
+			echo "</tr>";
+			
+		}
+		echo "</table>";
+		$num++;
+		echo("<br>");
+	}
+     
 }
+
 
 /*
 $sql = 'SELECT * FROM departments LIMIT 5';
