@@ -20,6 +20,8 @@ echo '<a href="index.php?page=R7">Who is currently the lowest paid employee?</a>
 echo '<a href="index.php?page=R8">How many employees currently work in each department?</a><br>';
 echo '<a href="index.php?page=R9">How much does each department currently spend on salaries? </a><br>';
 echo '<a href="index.php?page=R10">How much is currently spent for all salaries?</a><br>';
+echo '<a href="index.php?page=insert">Insert a new Employee</a><br>';
+echo '<a href="index.php?page=update">Update an Employee</a><br>';
 echo '<br><br>';
 
 //Page 1
@@ -77,6 +79,21 @@ if($_GET['page']=="R10")
 	 $sql = 'select sum(salaries.salary) from employees left join salaries on employees.emp_no = salaries.emp_no join titles on employees.emp_no = titles.emp_no;';
 }
 
+//Insert a new Employee
+if($_GET['page']=="insert")
+{
+
+	echo "<form name='Insert Employee' action='insert.php' method='get'>";
+	echo "First Name <input type=text name='firstname' placeholder='First Name'><br>";
+	echo "Last Name <input type=text name='lastname' placeholder='Last Name'><br>";
+	echo "Birth data <input type=text name='birthdate' placeholder='yyyy-mm-dd'><br>";
+	echo "Hire data <input type=text name=hiredate placeholder='yyyy-mm-dd'><br>";
+	echo "<input type='radio' name='gender' value='M'>Male<br>";
+	echo "<input type='radio' name='gender' value='F'>Female<br>";	
+	
+	echo "<input type=submit id='Insert' value='Add Employee'>";
+        echo "</form>";
+}
 
 
 // Sorts the array and prints it
@@ -88,14 +105,14 @@ if (strpos($_GET['page'],"R")===0)
 	foreach($db->query($sql) as $row)
 	{
 	
-	//remove duplicates	
+		//remove duplicates	
 		$remove=0;
 		foreach($row as $x)
 		{
 			unset($row[$remove]);
 			$remove++;
 		}
-			//Printer each Entrey as a table
+			//Printer each Entrey in the table
                         echo "<tr>";
                         echo "<td>";
                         echo ("Result Number");
@@ -118,8 +135,9 @@ if (strpos($_GET['page'],"R")===0)
 		$num++;
 		echo("<tr><td><br></td><td><br></td></tr>");
 	}
-echo "</table>";
+	echo "</table>";
 }    
+
 
 
 
