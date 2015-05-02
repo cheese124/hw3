@@ -48,7 +48,7 @@ echo "Hire data <input type=text name=hiredate placeholder='yyyy-mm-dd'><br>";
 echo "<input type='radio' name='gender' value='M'>Male<br>";
 echo "<input type='radio' name='gender' value='F'>Female<br>";
 
-echo "<input type=submit id='Insert' value='Add Employee'>";
+echo "<input type=submit id='Insert' value='Update Employee'>";
 echo "</form>";
 
 echo "<br><a href='index.php'>Click here to retuen to the home page</a><br>";
