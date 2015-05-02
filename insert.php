@@ -25,7 +25,40 @@ foreach($db->query($sql1) as $row)
 $emp_no = (($row['emp_no'])) +1;
 }
 
-$sql2 = "INSERT INTO employees (emp_no, birth_date, first_name, last_name, gender, hire_date) VALUES ($emp_no, $firstname, $lastname, $birthdate, $hiredate, $gender);";
-echo $sql2;
+$sql2 = "INSERT INTO employees (emp_no, birth_date, first_name, last_name, gender, hire_date) VALUES (:emp_no, :birthdate, :firstname, :lastname, :gender, :hiredate);";
+
+$q = $db->prepare($sql2);
+$q->execute(array(':emp_no'=>$emp_no, ':birthdate'=>$birthdate, ':firstname'=>$firstname, ':lastname'=>$lastname, ':gender'=>$gender, ':hiredate'=>$hiredate ));
+
+echo "This Employee was successfully added <br>";
+
+echo "<table border='1' style='width:100%' table-layout: fixed>";
+foreach($db->query($sql1) as $row)
+{
+	//remove duplicates     
+        $remove=0;
+        foreach($row as $x)
+        {
+        	unset($row[$remove]);
+                $remove++;
+        }
+       
+        foreach ($row as $key => $value)
+        {
+        	echo "<tr>";
+                echo "<td>";
+                echo ($key);
+                echo "</td>";
+                echo "<td>";
+                echo ($value);
+                echo "</td>";
+                echo "</tr>";
+        }
+}
+echo "</table>";
+
+echo"<br><br>";
+
+echo "<a href='index.php'>Click here to retuen to the home page</a><br>";
 
 ?>
