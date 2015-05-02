@@ -1,8 +1,8 @@
 <?php
 
-error_reporting(-1);
+//error_reporting(-1);
 
-ini_set('display_errors', 'On');
+//ini_set('display_errors', 'On');
 
 //Connect code
 $db = new PDO('mysql:host=localhost;dbname=employees;charset=utf8', 'root', 'protodrake124', array(PDO::ATTR_EMULATE_PREPARES => false,

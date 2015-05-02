@@ -17,11 +17,12 @@ $birthdate = ($_REQUEST["birthdate"]);
 $hiredate = ($_REQUEST["hiredate"]);
 $gender = ($_REQUEST["gender"]);
 
-echo "Update successful<br>";
+echo "<br>Update successful<br>";
 
 $sql1 = "select * from employees where emp_no =$emp_no";
 
-$num=1;
+echo"<br>Old Data<br>";
+
 echo "<table border='1' style='width:100%' table-layout: fixed>";
 foreach($db->query($sql1) as $row)
 {
@@ -33,15 +34,6 @@ foreach($db->query($sql1) as $row)
 		unset($row[$remove]);
                 $remove++;
         }
-        //Printer each entrey number in the table
-        echo "<tr>";
-	echo "<td>";
-	echo ("Old data");
-	echo "</td>";
-	echo "<td>";
-	echo ("<br>");
-	echo "</td>";
-	echo "</tr>";
 	foreach ($row as $key => $value)
 	{
 		echo "<tr>";
@@ -53,8 +45,6 @@ foreach($db->query($sql1) as $row)
 		echo "</td>";
 		echo "</tr>";
 	}
-	$num++;
-	echo("<tr><td><br></td><td><br></td></tr>");
 }
 echo "</table>";
 
@@ -63,6 +53,33 @@ $sql2 = "update employees set birth_date = :birthdate, first_name = :firstname, 
 $q = $db->prepare($sql2);
 $q->execute(array(':birthdate'=>$birthdate, ':firstname'=>$firstname, ':lastname'=>$lastname, ':gender'=>$gender, ':hiredate'=>$hiredate, ':emp_no'=>$emp_no));
 
-echo $sql2;
+echo"<br>New data<br>"; 
+
+echo "<table border='1' style='width:100%' table-layout: fixed>";
+foreach($db->query($sql1) as $row)
+{       
+
+        //remove duplicates     
+        $remove=0;
+        foreach($row as $x)
+        {       
+                unset($row[$remove]);
+                $remove++;
+        }          
+        foreach ($row as $key => $value) 
+        {       
+                echo "<tr>"; 
+                echo "<td>"; 
+                echo ($key); 
+                echo "</td>";
+                echo "<td>"; 
+                echo ($value);
+                echo "</td>";
+                echo "</tr>";
+        }
+}
+echo "</table>";
+
+echo "<br><a href='index.php'>Click here to retuen to the home page</a><br>";
 
 ?>
