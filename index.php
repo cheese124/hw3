@@ -11,42 +11,91 @@ $db = new PDO('mysql:host=localhost;dbname=employees;charset=utf8', 'root', 'pro
 
 //Pages
 echo '<a href="index.php?page=R1">Who is the highest paid employee?</a><br>';
-echo '<a href="index.php?page=2">Who is the highest paid employee between 1985 and 1981?</a><br>';
-echo '<a href="index.php?page=3">Which department currently has highest paid department manager?</a><br>';
-echo '<a href="index.php?page=4">What are the titles of all the departments?</a><br>';
-echo '<a href="index.php?page=5">Who are the current department heads?</a><br>';
-echo '<a href="index.php?page=6">Who is highest paid employee that is not a department head?</a><br>';
-echo '<a href="index.php?page=7">Who is currently the lowest paid employee?</a><br>';
-echo '<a href="index.php?page=8">How many employees currently work in each department?</a><br>';
-echo '<a href="index.php?page=9">How much does each department currently spend on salaries? </a><br>';
-echo '<a href="index.php?page=10">How much is currently spent for all salaries?</a><br>';
+echo '<a href="index.php?page=R2">Who is the highest paid employee between 1985 and 1981?</a><br>';
+echo '<a href="index.php?page=R3">Which department currently has highest paid department manager?</a><br>';
+echo '<a href="index.php?page=R4">What are the titles of all the departments?</a><br>';
+echo '<a href="index.php?page=R5">Who are the current department heads?</a><br>';
+echo '<a href="index.php?page=R6">Who is highest paid employee that is not a department head?</a><br>';
+echo '<a href="index.php?page=R7">Who is currently the lowest paid employee?</a><br>';
+echo '<a href="index.php?page=R8">How many employees currently work in each department?</a><br>';
+echo '<a href="index.php?page=R9">How much does each department currently spend on salaries? </a><br>';
+echo '<a href="index.php?page=R10">How much is currently spent for all salaries?</a><br>';
 echo '<br><br>';
 
 //Page 1
 if($_GET['page']=="R1")
 {
 	$sql = 'select employees.emp_no, employees.first_name, employees.last_name, salaries.salary from
-	 employees left join salaries on employees.emp_no = salaries.emp_no order by salary DESC limit 2;';
+	 employees left join salaries on employees.emp_no = salaries.emp_no order by salary DESC limit 1;';
+}
+
+//Page 2
+if($_GET['page']=="R2")
+{
+        $sql = 'select employees.emp_no, employees.first_name, employees.last_name, salaries.salary from employees left join salaries on employees.emp_no = salaries.emp_no where salaries.from_date between "1981-01-01" and "1985-01-01" order by salary DESC limit 1;';
 }
 	
+//Page 3
+if($_GET['page']=="R3")
+{
+        $sql = 'select employees.emp_no, employees.first_name, employees.last_name, departments.dept_name, salaries.salary from employees left join salaries on employees.emp_no = salaries.emp_no join titles on employees.emp_no = titles.emp_no join dept_manager on  dept_manager.emp_no = employees.emp_no join departments on departments.dept_no = dept_manager.dept_no where titles.title = "Manager" and salaries.to_date = "9999-01-01" order by salaries.salary DESC limit 1;';
+}
+
+//Page 4
+if($_GET['page']=="R4")
+{
+        $sql = 'select dept_name from departments group by dept_name;';
+}
+//Page 5
+if($_GET['page']=="R5")
+{
+        $sql = 'select employees.emp_no, employees.first_name, employees.last_name, titles.title from employees left join titles on employees.emp_no = titles.emp_no where titles.title = "Manager" and titles.to_date = "9999-01-01";';
+}
+//Page 6
+if($_GET['page']=="R6")
+{
+        $sql = 'select employees.emp_no, employees.first_name, employees.last_name, titles.title, salaries.salary from employees left join salaries on employees.emp_no = salaries.emp_no join titles on employees.emp_no = titles.emp_no where titles.title != "Manager" order by salaries.salary DESC limit 1;';
+}
+//Page 7
+if($_GET['page']=="R7")
+{       
+	 $sql = 'select employees.emp_no, employees.first_name, employees.last_name, salaries.salary from employees left join salaries on employees.emp_no = salaries.emp_no order by salaries.emp_no  ASC limit 1;';
+}
+//Page 8
+if($_GET['page']=="R8")
+{       
+	 $sql = 'select departments.dept_name, count(departments.dept_name) from dept_emp left join employees on employees.emp_no = dept_emp.emp_no join departments on departments.dept_no = dept_emp.dept_no where to_date = "9999-01-01" group by dept_name;';
+}
+//Page 9
+if($_GET['page']=="R9")
+{       
+	 $sql = 'select departments.dept_name, sum(salaries.salary) from dept_emp left join employees on employees.emp_no = dept_emp.emp_no join departments on departments.dept_no = dept_emp.dept_no join salaries on employees.emp_no = salaries.emp_no where dept_emp.to_date = "9999-01-01" group by dept_name;';
+}
+//Page 10
+if($_GET['page']=="R10")
+{       
+	 $sql = 'select sum(salaries.salary) from employees left join salaries on employees.emp_no = salaries.emp_no join titles on employees.emp_no = titles.emp_no;';
+}
+
+
 
 // Sorts the array and prints it
 // This statment detects if the button clicked is a request R
 if (strpos($_GET['page'],"R")===0)
 {
 	$num=1;
+	echo "<table border='1' style='width:100%' table-layout: fixed>";
 	foreach($db->query($sql) as $row)
 	{
 	
 	//remove duplicates	
-	$remove=0;
-	foreach($row as $x)
-	{
-		unset($row[$remove]);
-		$remove++;
-	}
-		//Printer each Entrey as a table
-		echo "<table border='1' style='width:100%' table-layout: fixed>";
+		$remove=0;
+		foreach($row as $x)
+		{
+			unset($row[$remove]);
+			$remove++;
+		}
+			//Printer each Entrey as a table
                         echo "<tr>";
                         echo "<td>";
                         echo ("Result Number");
@@ -66,10 +115,10 @@ if (strpos($_GET['page'],"R")===0)
 			echo "</td>";
 			echo "</tr>";	
 		}
-		echo "</table>";
 		$num++;
-		echo("<br>");
+		echo("<tr><td><br></td><td><br></td></tr>");
 	}
+echo "</table>";
 }    
 
 
