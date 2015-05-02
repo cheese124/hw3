@@ -95,6 +95,55 @@ if($_GET['page']=="insert")
         echo "</form>";
 }
 
+//Update an employee
+if($_GET['page']=="update")
+{
+
+	$sql = "select * from employees order by emp_no desc limit 5;";
+	
+        $num=1;
+        echo "<table border='1' style='width:100%' table-layout: fixed>";
+        foreach($db->query($sql) as $row)
+        {
+        
+                //remove duplicates     
+                $remove=0;
+                foreach($row as $x)
+                {
+                        unset($row[$remove]);
+                        $remove++;
+                }
+			echo "<form name='Update Employee' action='update.php' method='get'>";
+			$emp = ($row['emp_no']);
+                        //Printer each entrey number in the table
+                        echo "<tr>";
+                        echo "<td>";
+                        echo ("Result Number");
+                        echo "</td>";
+                        echo "<td>";
+			echo ($num."   ");
+			echo "<input type=submit id='Update' value='Update'>";
+			echo "<input type='hidden' name='emp' value='$emp'";
+                        echo "</td>";
+                        echo "</tr>";
+			echo "</form>";   
+                foreach ($row as $key => $value)
+                {
+                        echo "<tr>";
+                        echo "<td>";
+                        echo ($key);
+                        echo "</td>";
+                        echo "<td>";
+                        echo ($value);
+                        echo "</td>";
+                        echo "</tr>";
+                }
+                $num++;
+                echo("<tr><td><br></td><td><br></td></tr>");
+	}
+	echo "</table>";
+}
+
 
 // Sorts the array and prints it
 // This statment detects if the button clicked is a request R
@@ -112,7 +161,7 @@ if (strpos($_GET['page'],"R")===0)
 			unset($row[$remove]);
 			$remove++;
 		}
-			//Printer each Entrey in the table
+			//Printer each entrey number in the table
                         echo "<tr>";
                         echo "<td>";
                         echo ("Result Number");
